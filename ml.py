@@ -4,8 +4,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-
-# %%
+from matplotlib import style
 # Importing Data
 URL = 'events.csv'
 df = pd.read_csv(URL)
@@ -22,7 +21,6 @@ del df["End time UTC"]
 del df["Start time UTC+03:00"]
 df.rename(columns={"End time UTC+03:00":"DateTime","Electricity consumption in Finland":"Consumption"},inplace=True)
 print(df.head(5))
-# %%
 # since we are dealing with time series data we should edite the index from 1 2 3 ... --> DateTime format.
 dataset = df
 dataset["Month"] = pd.to_datetime(df["DateTime"]).dt.month
@@ -37,19 +35,13 @@ dataset.head()
 print("")
 print("Total Number of Years: ", dataset.Year.nunique() )
 print(dataset.Year.unique())
-
-# %%
 # By assuming week starts on Mondey and ends on Sunday.
 # The closest start would be on Monday 4-1-2016 
 # The closest end would be on sunday 26-12-2021
 # So we should omit first 71 rows and last 121 rows.
 dataset = dataset[71:-121]
 dataset.tail()
-
-# %% 
 # ## Data Visualizations
-
-from matplotlib import style
 fig = plt.figure()
 axes1 = plt.subplot2grid((1,1), (0,0))
 
@@ -65,12 +57,8 @@ plt.legend()
 for label in axes1.xaxis.get_ticklabels():
     label.set_rotation(90)
 
-
-# %%
 plt.figure(figsize=(15,10))
 plt.plot(dataset["Consumption"])
-
-# %%
 # Energy Consumption Each Year
 
 fig = plt.figure(figsize = (30,30))
@@ -115,14 +103,11 @@ plt.xlabel("Date")
 plt.ylabel("Energy in MW")
 plt.grid(True, alpha=1)
 plt.legend()
-
-# %%
 # Lets us see the Distribution off Energy Consumption so we have a idea about your Dataset a bit more
 fig = plt.figure(figsize = (15,10))
 sns.distplot(dataset["Consumption"])
 plt.title("Energy Distribution")
 
-# %%
 fig = plt.figure(figsize = (15,10))
 sns.boxplot(x=dataset["Month"], y=dataset["Consumption"], data= df)
 plt.title("Energy Consumption VS Month")
@@ -133,7 +118,6 @@ plt.legend()
 for label in ax1.xaxis.get_ticklabels():
     label.set_rotation(90)
 
-# %%
 dataset1 = dataset
 fig = plt.figure(figsize = (15,10))
 sns.boxplot(x=dataset1.index.hour, y=dataset1.Consumption, data= df)
@@ -145,7 +129,6 @@ plt.legend()
 for label in ax1.xaxis.get_ticklabels():
     label.set_rotation(90)
 
-# %%
 fig = plt.figure(figsize = (15,10))
 sns.boxplot(x=dataset1.index.year, y=dataset1.Consumption, data= df)
 plt.title("Energy Consumption VS Year")
@@ -184,16 +167,13 @@ print("New Dataset: ", newDataSet.shape)
 # newDataSet.to_csv("newDataSet.csv")
 # from google.colab import files
 # files.download("newDataSet.csv")
-
-# %%
 newDataSet.head()
 
-# %%
 y = newDataSet["Consumption"]
 print(y[0])
 y.shape
 
-# %%
+# %%開始準備訓練
 # Normalize data before model fitting
 # it will boost the performance( in neural networks) + transform
 from sklearn.preprocessing import MinMaxScaler
